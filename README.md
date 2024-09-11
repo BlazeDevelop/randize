@@ -204,9 +204,9 @@ print(f"📅 Random Date: {random_date}")
 
 ## 📋 To-Do
 
-- [ ] Implement a function to generate random texts.
-- [ ] Update documentation with examples of using new functions.
-- [ ] Optimize performance of random data generators.
+- [x] Implement a function to generate random texts.
+- [x] Update documentation with examples of using new functions.
+- [x] Optimize performance of random data generators.
 
 ## 🤝 Contributing
 
