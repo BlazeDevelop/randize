@@ -3,7 +3,9 @@ import string
 import requests
 import uuid
 from datetime import datetime, timedelta, timezone
-import pytz  # This module provides support for time zones
+import pytz
+import lorem
+from deep_translator import GoogleTranslator
 
 class Randize:
     def __init__(self):
@@ -184,8 +186,8 @@ class Randize:
         Generate random weather conditions.
         """
         conditions = ['Sunny', 'Cloudy', 'Rainy', 'Snowy', 'Stormy', 'Windy', 'Foggy', 'Hail', 'Thunderstorm']
-        temperature = random.randint(-30, 40)  # Random temperature between -30 and 40 Celsius
-        humidity = random.randint(0, 100)  # Random humidity percentage
+        temperature = random.randint(-30, 40)
+        humidity = random.randint(0, 100)
         return {'condition': random.choice(conditions), 'temperature': temperature, 'humidity': humidity}
 
     @staticmethod
@@ -289,7 +291,7 @@ class Randize:
         """
         Generate a random string of a given length.
         """
-        characters = string.ascii_letters  # Start with all letters (both lowercase and uppercase)
+        characters = string.ascii_letters
 
         if include_digits:
             characters += string.digits
@@ -298,3 +300,30 @@ class Randize:
             characters += string.punctuation
 
         return ''.join(random.choices(characters, k=length))
+
+    @staticmethod
+    def random_text(language='english', word_count=50):
+        """
+        Generates random text in English and translates it into a given language.
+
+        Parameters:
+        - language (str): The language code to translate the text into (default is 'english').
+        - word_count (int): The number of words to generate (default is 50).
+
+        Returns:
+        - str: Randomly generated text in the specified language.
+        """
+        words = []
+        while len(words) < word_count:
+            words.extend(lorem.text().split())
+        text = ' '.join(words[:word_count])
+
+        if language == 'en':
+            return text
+
+        try:
+            translated_text = GoogleTranslator(source='auto', target=language).translate(text)
+            return translated_text
+        except Exception as e:
+            print(f"Text translation error: {e}")
+            return text
