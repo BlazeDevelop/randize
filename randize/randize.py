@@ -4,7 +4,6 @@ import requests
 import uuid
 from datetime import datetime, timedelta, timezone
 import pytz  # This module provides support for time zones
-import string as str_module
 
 class Randize:
     def __init__(self):
@@ -53,11 +52,8 @@ class Randize:
         """
         try:
             response = requests.get(api_url)
-            if response.status_code == 200:
-                return response.json()[0]  # Assuming the API returns a list of words
-            else:
-                return 'unknown'
-        except requests.exceptions.RequestException:
+            return response.json()[0] if response.status_code == 200 else 'unknown'
+        except requests.RequestException:
             return 'unknown'
 
     @staticmethod
@@ -68,12 +64,11 @@ class Randize:
         - include_digits: whether to include digits in the password
         - include_punctuation: whether to include punctuation in the password
         """
-        chars = string.ascii_letters  # A-Z, a-z
+        chars = string.ascii_letters
         if include_digits:
             chars += string.digits
         if include_punctuation:
             chars += string.punctuation
-
         return ''.join(random.choices(chars, k=length))
 
     @staticmethod
@@ -82,7 +77,7 @@ class Randize:
         Generate a realistic random email address.
         """
         first_name = Randize.word()
-        username = f"{first_name}".lower().replace(' ', '')
+        username = first_name.lower().replace(' ', '')
         return f"{username}@{domain}"
 
     @staticmethod
@@ -93,13 +88,10 @@ class Randize:
         try:
             response = requests.get(api_url)
             if response.status_code == 200:
-                data = response.json()
-                first_name = data['results'][0]['name']['first']
-                last_name = data['results'][0]['name']['last']
-                return f"{first_name} {last_name}"
-            else:
-                return 'Unknown Name'
-        except requests.exceptions.RequestException:
+                name = response.json()['results'][0]['name']
+                return f"{name['first']} {name['last']}"
+            return 'Unknown Name'
+        except requests.RequestException:
             return 'Unknown Name'
 
     @staticmethod
@@ -111,38 +103,19 @@ class Randize:
             """
             Implementing the Luhn algorithm to calculate the checksum for the payment card.
             """
-            def digits_of(n):
-                return [int(d) for d in str(n)]
-            
-            digits = digits_of(card_number)
-            odd_digits = digits[-1::-2]
-            even_digits = digits[-2::-2]
-            checksum = sum(odd_digits)
-            for d in even_digits:
-                checksum += sum(digits_of(d * 2))
+            digits = [int(d) for d in str(card_number)]
+            checksum = sum(digits[-1::-2]) + sum(sum(divmod(2 * d, 10)) for d in digits[-2::-2])
             return checksum % 10
 
-        # Generate first 15 digits randomly
         card_number = [random.randint(1, 9)] + [random.randint(0, 9) for _ in range(14)]
-        # Join card number into a single integer-like string for checksum calculation
         card_number_str = ''.join(map(str, card_number))
-        # Calculate check digit
-        check_digit = luhn_checksum(card_number_str)
-        # Append check digit to the card number
-        card_number.append(check_digit)
+        card_number.append((10 - luhn_checksum(card_number_str)) % 10)
 
-        # Generate additional details
         card_name = Randize.name()
-        expiration_date = f"{random.randint(1, 12):02}/{random.randint(23, 30)}"  # MM/YY format
+        expiration_date = f"{random.randint(1, 12):02}/{random.randint(23, 30)}"
         cvv = Randize.digit(3)
 
-        # Return all card details
-        return {
-            'number': ''.join(map(str, card_number)),
-            'name': card_name,
-            'expiration_date': expiration_date,
-            'cvv': cvv
-        }
+        return {'number': ''.join(map(str, card_number)), 'name': card_name, 'expiration_date': expiration_date, 'cvv': cvv}
 
     @staticmethod
     def struct(custom_structure=None):
@@ -156,29 +129,20 @@ class Randize:
 
         randomized_struct = {}
         for key, value_type in structure.items():
-            if value_type == 'name':
-                randomized_struct[key] = Randize.name()
-            elif value_type == 'number':
-                randomized_struct[key] = Randize.number()
-            elif value_type == 'payment_card':
-                randomized_struct[key] = Randize.payment_card()
-            else:
-                randomized_struct[key] = None  # Undefined types handled as None
+            func = getattr(Randize, value_type, lambda: None)
+            randomized_struct[key] = func() if callable(func) else None
 
         return randomized_struct
     
     @staticmethod
     def date(start_year=2000, end_year=2023):
-        from datetime import datetime
-        from random import randrange
         start_date = datetime(start_year, 1, 1)
         end_date = datetime(end_year, 12, 31)
         random_date = start_date + (end_date - start_date) * random.random()
         return random_date.strftime("%Y-%m-%d")
-
+    
     @staticmethod
     def time():
-        from datetime import time
         return f"{random.randint(0, 23):02}:{random.randint(0, 59):02}:{random.randint(0, 59):02}"
     
     @staticmethod
@@ -260,8 +224,7 @@ class Randize:
         """
         domain_names = ["example", "mysite", "coolblog", "app", "company"]
         paths = ["about", "contact", "products", "services", "home"]
-        domains = ['.com', '.org', '.net', '.io', '.ai']
-        domain = f"{random.choice(domain_names)}{random.choice(domains)}"
+        domain = f"{random.choice(domain_names)}{random.choice(['.com', '.org', '.net', '.io', '.ai'])}"
         path = '/'.join(Randize.word().split())
         return f"https://www.{domain}/{path}"
     
@@ -283,35 +246,22 @@ class Randize:
         - tz: Time zone for the generated date-time.
         - granularity: Granularity for time ('seconds', 'minutes', 'hours', 'days').
         """
-        # Convert input dates to datetime objects
         start = datetime.strptime(start_date, '%Y-%m-%d')
         end = datetime.strptime(end_date, '%Y-%m-%d')
-
-        # Generate a random date between start and end
         delta = end - start
         random_days = random.randint(0, delta.days)
         random_date = start + timedelta(days=random_days)
 
-        # Adjust time part based on granularity
         if granularity == 'seconds':
-            random_time = timedelta(
-                hours=random.randint(0, 23),
-                minutes=random.randint(0, 59),
-                seconds=random.randint(0, 59)
-            )
+            random_time = timedelta(hours=random.randint(0, 23), minutes=random.randint(0, 59), seconds=random.randint(0, 59))
         elif granularity == 'minutes':
-            random_time = timedelta(
-                hours=random.randint(0, 23),
-                minutes=random.randint(0, 59)
-            )
+            random_time = timedelta(hours=random.randint(0, 23), minutes=random.randint(0, 59))
         elif granularity == 'hours':
             random_time = timedelta(hours=random.randint(0, 23))
         else:
             random_time = timedelta()
 
         random_datetime = random_date + random_time
-
-        # Set the time zone
         tz_info = pytz.timezone(tz)
         random_datetime = tz_info.localize(random_datetime)
 
