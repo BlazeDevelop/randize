@@ -10,6 +10,7 @@ Welcome to **Randize** — your all-in-one solution for generating random data i
   - [Basic Randomization](#basic-randomization)
   - [Advanced Randomization](#advanced-randomization)
 - [Examples](#-examples)
+- [To-Do](#-to-do)
 - [Contributing](#-contributing)
 - [License](#-license)
 
@@ -61,6 +62,41 @@ password = Randize.password(length=16, include_digits=True, include_punctuation=
 print(password)  # Example: 'aB3$dEfGhI8!K@Lm'
 ```
 
+#### Generate a Random UUID
+
+```python
+unique_id = Randize.uuid()
+print(unique_id)  # Example: '123e4567-e89b-12d3-a456-426614174000'
+```
+
+#### Generate a Random Email
+
+```python
+email = Randize.email(domain='example.com')
+print(email)  # Example: 'john@example.com'
+```
+
+#### Generate a Random Name
+
+```python
+name = Randize.name()
+print(name)  # Example: 'John Doe'
+```
+
+#### Generate a Random Date
+
+```python
+random_date = Randize.date(start_year=2000, end_year=2023)
+print(random_date)  # Example: '2015-06-21'
+```
+
+#### Generate a Random Time
+
+```python
+random_time = Randize.time()
+print(random_time)  # Example: '14:30:45'
+```
+
 ### Advanced Randomization
 
 #### Create a Random User Profile
@@ -82,6 +118,76 @@ payment_card = Randize.payment_card()
 print(payment_card)
 ```
 
+#### Generate Random IPv4 Address
+
+```python
+ipv4 = Randize.ipv4()
+print(ipv4)  # Example: '192.168.1.1'
+```
+
+#### Generate Random IPv6 Address
+
+```python
+ipv6 = Randize.ipv6()
+print(ipv6)  # Example: '2001:0db8:85a3:0000:0000:8a2e:0370:7334'
+```
+
+#### Generate Random Color Palette
+
+```python
+color_palette = Randize.random_color_palette(n=5)
+print(color_palette)  # Example: ['#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3']
+```
+
+#### Generate Random Geographic Coordinates
+
+```python
+coordinates = Randize.random_coordinate()
+print(coordinates)  # Example: {'latitude': 40.7128, 'longitude': -74.0060}
+```
+
+#### Generate Random Emoji Pair
+
+```python
+emoji_pair = Randize.random_emoji_pair()
+print(emoji_pair)  # Example: ('😀', '🚀')
+```
+
+#### Generate Random Weather Conditions
+
+```python
+weather = Randize.random_weather()
+print(weather)  # Example: {'condition': 'Sunny', 'temperature': 25, 'humidity': 60}
+```
+
+#### Generate Random MAC Address
+
+```python
+mac_address = Randize.random_mac_address()
+print(mac_address)  # Example: '00:14:22:01:23:45'
+```
+
+#### Generate a Random URL
+
+```python
+url = Randize.random_url()
+print(url)  # Example: 'https://www.example.com/about'
+```
+
+#### Generate Random Text with Translation
+
+```python
+text = Randize.random_text(language='italian', word_count=10)
+print(text)  # Example: Random text in Italian
+```
+
+#### Generate Random User-Agent String
+
+```python
+user_agent = Randize.random_user_agent()
+print(user_agent)  # Example: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+```
+
 ## 📋 Examples
 
 Here's a quick example of how you can use **Randize** to generate random data:
@@ -95,6 +201,12 @@ print(f"🎨 Color Palette: {color_palette}")
 random_date = Randize.date(start_year=2000, end_year=2023)
 print(f"📅 Random Date: {random_date}")
 ```
+
+## 📋 To-Do
+
+- [ ] Implement a function to generate random texts.
+- [ ] Update documentation with examples of using new functions.
+- [ ] Optimize performance of random data generators.
 
 ## 🤝 Contributing
 
