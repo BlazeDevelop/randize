@@ -17,7 +17,7 @@ class Randize:
     @staticmethod
     def shuffle(lst):
         """
-        Securely shuffle a list in place and return it.
+        shuffle a list in place and return it.
         """
         for i in range(len(lst) - 1, 0, -1):
             j = Randize._system_random.randint(0, i)
@@ -27,7 +27,7 @@ class Randize:
     @staticmethod
     def choice(lst):
         """
-        Return a secure random item from a list.
+        Return a random item from a list.
         """
         return choice(lst)
 
@@ -41,14 +41,14 @@ class Randize:
     @staticmethod
     def number(min_value=0, max_value=100):
         """
-        Return a secure random number between min_value and max_value.
+        Return a secure number between min_value and max_value.
         """
         return min_value + randbelow(max_value - min_value + 1)
 
     @staticmethod
     def digit(length=1):
         """
-        Return a secure random digit string with a given length.
+        Return a random digit string with a given length.
         """
         return ''.join(choice(string.digits) for _ in range(length))
 
@@ -56,8 +56,7 @@ class Randize:
     @lru_cache(maxsize=10)
     def word(api_url="https://random-word-api.herokuapp.com/word?number=1"):
         """
-        Fetch a random word from an external API (Random Word API).
-        Cache responses to minimize repeated requests.
+        Return a random word
         """
         try:
             response = requests.get(api_url, timeout=2)
@@ -70,7 +69,7 @@ class Randize:
     @staticmethod
     def password(length=12, include_digits=True, include_punctuation=True):
         """
-        Return a secure random password of specified length.
+        Return a random password of specified length.
         """
         chars = string.ascii_letters
         if include_digits:
@@ -82,7 +81,7 @@ class Randize:
     @staticmethod
     def email(domain='gmail.com'):
         """
-        Generate a realistic random email address.
+        Generate a random email address.
         """
         first_name = Randize.word()
         username = first_name.lower().replace(' ', '')
@@ -92,19 +91,16 @@ class Randize:
     @lru_cache(maxsize=100)
     def name(api_url="https://api.uinames.com/?amount=1"):
         """
-        Fetch a random name from an external API (UINames API).
-        Use cache to minimize repeated requests. Fallback to default names if API fails.
+        Return a random name
         """
         try:
-            # Используем UINames API для получения случайного имени
-            response = requests.get(api_url, timeout=2)  # Таймаут 2 секунды для ускорения
+            response = requests.get(api_url, timeout=2)
             if response.status_code == 200:
                 name_data = response.json()
                 return f"{name_data['name']} {name_data['surname']}"
         except requests.RequestException:
             pass
 
-        # В случае ошибки или долгого ожидания возвращаем заранее подготовленные имена
         fallback_names = [
             "John Doe", "Jane Smith", "Robert Brown", "Emily White", "Michael Johnson", "Sarah Davis",
             "David Wilson", "Laura Miller", "James Anderson", "Olivia Taylor", "William Thomas",
@@ -133,7 +129,7 @@ class Randize:
     @staticmethod
     def payment_card():
         """
-        Generate a secure random payment card number (16-digit Visa/MasterCard style), name, expiration date, and CVV code.
+        Generate a random payment card number (16-digit Visa/MasterCard style), name, expiration date, and CVV code.
         """
 
         def luhn_checksum(card_number):
@@ -260,7 +256,7 @@ class Randize:
     @staticmethod
     def random_url():
         """
-        Generate a realistic random URL with a meaningful path and domain.
+        Generate a random URL with a meaningful path and domain.
         """
         domain_names = ["example", "mysite", "coolblog", "app", "company"]
         paths = ["about", "contact", "products", "services", "home"]
@@ -302,7 +298,7 @@ class Randize:
     @staticmethod
     def random_user_agent():
         """
-        Generate a random user-agent string for web scraping or testing.
+        Generate a random user-agent string
         """
         user_agents = [
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36",
@@ -319,7 +315,7 @@ class Randize:
     @staticmethod
     def string(length=8, include_digits=True, include_punctuation=False):
         """
-        Generate a secure random string of a given length.
+        Generate a random string of a given length.
         """
         characters = string.ascii_letters
 
@@ -334,7 +330,7 @@ class Randize:
     @staticmethod
     def random_text(language='english', word_count=50):
         """
-        Generates random text in English and translates it into a given language.
+        Generates random text
         """
         words = []
         while len(words) < word_count:
