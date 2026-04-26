@@ -34,7 +34,7 @@ pip install randize
 Or, clone the repository and install manually:
 
 ```bash
-git clone https://github.com/BlazeDevelop/randize.git
+git clone https://github.com/Flaymie/randize.git
 cd randize
 pip install -r requirements.txt
 ```
